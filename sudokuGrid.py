@@ -6,6 +6,7 @@ class SudokuGrid:
         self.puzzle = path
         self.coord = [0,0]
         self.grid = self.createGrid()
+        self.counter = 0
     
     def getX(self):
         return self.coord[0]
@@ -38,7 +39,8 @@ class SudokuGrid:
         for x in range(SIZE):
             for y in range(SIZE):
                 if self.grid[x][y] == 0:
-                    self.coord = [x,y]
+                    self.coord[0] = x
+                    self.coord[1] = y
                     return True
         return False
 
@@ -53,6 +55,7 @@ class SudokuGrid:
 
     def solveBacktrack(self):
         self.coord = [0,0]
+        self.counter += 1
 
         # find unsolved cell, if there are not any, we have finished
         if not self.findEmpty():
@@ -60,6 +63,12 @@ class SudokuGrid:
 
         row = self.getX()
         column = self.getY()
+        
+        # debugging stuff
+        print(row, column, end='  ')
+        if self.counter % 10 == 0:
+            print()
+
         # try numbers 1 to 9
         for n in range(1,SIZE+1):
             if self.checkIfSafe(n):
@@ -70,6 +79,8 @@ class SudokuGrid:
                 
                 # reset to 0
                 self.grid[row][column] = 0
+            if row == 0 and column == 0:
+                self.counter += 100
 
         return False
 
@@ -95,5 +106,6 @@ if __name__=="__main__":
     if g.solveBacktrack():
         g.printGrid()
     else:
-        print("You Failed")
+        print("\nYou Failed")
+        print(g.counter)
         g.printGrid()
